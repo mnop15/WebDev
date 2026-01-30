@@ -1188,7 +1188,7 @@ label {
 
 .work-image {
 	height: 180px;
-	background: rgba(0, 0, 0, 0.35);
+	background: rgb(0 92 101 / 29%);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1233,5 +1233,6 @@ label {
 }
 
 .work-btn:hover {
-	background: linear-gradient(135deg, #ffd54f, #ff9800);
+	background: linear-gradient(135deg, #ffffff,#ffffff, #72fdd3);
+	color: #000;
 }
