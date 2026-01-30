@@ -1,7 +1,5 @@
 jQuery(document).ready(function($){
   var slidesWrapper = $('.cd-hero-slider');
-
-  //check if a .cd-hero-slider exists in the DOM 
   if ( slidesWrapper.length > 0 ) {
     var primaryNav = $('.cd-primary-nav'),
       sliderNav = $('.cd-slider-nav'),
@@ -10,24 +8,16 @@ jQuery(document).ready(function($){
       visibleSlidePosition = 0,
       autoPlayId,
       autoPlayDelay = 5000;
-
-    //upload videos (if not on mobile devices)
     uploadVideo(slidesWrapper);
-
-    //autoplay slider
     setAutoplay(slidesWrapper, slidesNumber, autoPlayDelay);
-
-    //on mobile - open/close primary navigation clicking/tapping the menu icon
     primaryNav.on('click', function(event){
       if($(event.target).is('.cd-primary-nav')) $(this).children('ul').toggleClass('is-visible');
     });
     
-    //change visible slide
     sliderNav.on('click', 'li', function(event){
       event.preventDefault();
       var selectedItem = $(this);
       if(!selectedItem.hasClass('selected')) {
-        // if it's not already selected
         var selectedPosition = selectedItem.index(),
           activePosition = slidesWrapper.find('li.selected').index();
         
@@ -36,13 +26,10 @@ jQuery(document).ready(function($){
         } else {
           prevSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, selectedPosition);
         }
-
-        //this is used for the autoplay
         visibleSlidePosition = selectedPosition;
 
         updateSliderNavigation(sliderNav, selectedPosition);
         updateNavigationMarker(navigationMarker, selectedPosition+1);
-        //reset autoplay
         setAutoplay(slidesWrapper, slidesNumber, autoPlayDelay);
       }
     });
@@ -95,22 +82,17 @@ jQuery(document).ready(function($){
     container.find('.cd-bg-video-wrapper').each(function(){
       var videoWrapper = $(this);
       if( videoWrapper.is(':visible') ) {
-        // if visible - we are not on a mobile device 
         var videoUrl = videoWrapper.data('video'),
           video = $('<video loop><source src="'+videoUrl+'.mp4" type="video/mp4" /><source src="'+videoUrl+'.webm" type="video/webm" /></video>');
         video.appendTo(videoWrapper);
-        // play video if first slide
         if(videoWrapper.parent('.cd-bg-video.selected').length > 0) video.get(0).play();
       }
     });
   }
 
   function checkVideo(hiddenSlide, container, n) {
-    //check if a video outside the viewport is playing - if yes, pause it
     var hiddenVideo = hiddenSlide.find('video');
     if( hiddenVideo.length > 0 ) hiddenVideo.get(0).pause();
-
-    //check if the select slide contains a video element - if yes, play the video
     var visibleVideo = container.children('li').eq(n).find('video');
     if( visibleVideo.length > 0 ) visibleVideo.get(0).play();
   }
@@ -120,7 +102,6 @@ jQuery(document).ready(function($){
   }
 
   $.fn.removeClassPrefix = function(prefix) {
-    //remove all classes starting with 'prefix'
       this.each(function(i, el) {
           var classes = el.className.split(" ").filter(function(c) {
               return c.lastIndexOf(prefix, 0) !== 0;
@@ -130,30 +111,12 @@ jQuery(document).ready(function($){
       return this;
   };
 });
-/*!
- * Lightbox v2.9.0
- * by Lokesh Dhakar
- *
- * More info:
- * http://lokeshdhakar.com/projects/lightbox2/
- *
- * Copyright 2007, 2015 Lokesh Dhakar
- * Released under the MIT license
- * https://github.com/lokesh/lightbox2/blob/master/LICENSE
- */
-
-// Uses Node, AMD or browser globals to create a module.
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
         define(['jquery'], factory);
     } else if (typeof exports === 'object') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like environments that support module.exports,
-        // like Node.
         module.exports = factory(require('jquery'));
     } else {
-        // Browser globals (root is window)
         root.lightbox = factory(root.jQuery);
     }
 }(this, function ($) {
@@ -162,14 +125,10 @@ jQuery(document).ready(function($){
     this.album = [];
     this.currentImageIndex = void 0;
     this.init();
-
-    // options
     this.options = $.extend({}, this.constructor.defaults);
     this.option(options);
   }
 
-  // Descriptions of all options available on the demo site:
-  // http://lokeshdhakar.com/projects/lightbox2/index.html#options
   Lightbox.defaults = {
     albumLabel: 'Image %1 of %2',
     alwaysShowNavOnTouchDevices: false,
@@ -183,14 +142,6 @@ jQuery(document).ready(function($){
     showImageNumberLabel: true,
     wrapAround: false,
     disableScrolling: false,
-    /*
-    Sanitize Title
-    If the caption data is trusted, for example you are hardcoding it in, then leave this to false.
-    This will free you to add html tags, such as links, in the caption.
-
-    If the caption data is user submitted or from some other untrusted source, then set this to true
-    to prevent xss and other injection attacks.
-     */
     sanitizeTitle: false
   };
 
@@ -204,15 +155,11 @@ jQuery(document).ready(function($){
 
   Lightbox.prototype.init = function() {
     var self = this;
-    // Both enable and build methods require the body tag to be in the DOM.
     $(document).ready(function() {
       self.enable();
       self.build();
     });
   };
-
-  // Loop through anchors and areamaps looking for either data-lightbox attributes or rel attributes
-  // that contain 'lightbox'. When these are clicked, start lightbox.
   Lightbox.prototype.enable = function() {
     var self = this;
     $('body').on('click', 'a[rel^=lightbox], area[rel^=lightbox], a[data-lightbox], area[data-lightbox]', function(event) {
@@ -220,22 +167,15 @@ jQuery(document).ready(function($){
       return false;
     });
   };
-
-  // Build html for the lightbox and the overlay.
-  // Attach event handlers to the new DOM elements. click click click
   Lightbox.prototype.build = function() {
     var self = this;
     $('<div id="lightboxOverlay" class="lightboxOverlay"></div><div id="lightbox" class="lightbox"><div class="lb-outerContainer"><div class="lb-container"><img class="lb-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" /><div class="lb-nav"><a class="lb-prev" href="" ></a><a class="lb-next" href="" ></a></div><div class="lb-loader"><a class="lb-cancel"></a></div></div></div><div class="lb-dataContainer"><div class="lb-data"><div class="lb-details"><span class="lb-caption"></span><span class="lb-number"></span></div><div class="lb-closeContainer"><a class="lb-close"></a></div></div></div></div>').appendTo($('body'));
-
-    // Cache jQuery objects
     this.$lightbox       = $('#lightbox');
     this.$overlay        = $('#lightboxOverlay');
     this.$outerContainer = this.$lightbox.find('.lb-outerContainer');
     this.$container      = this.$lightbox.find('.lb-container');
     this.$image          = this.$lightbox.find('.lb-image');
     this.$nav            = this.$lightbox.find('.lb-nav');
-
-    // Store css values for future lookup
     this.containerPadding = {
       top: parseInt(this.$container.css('padding-top'), 10),
       right: parseInt(this.$container.css('padding-right'), 10),
@@ -249,8 +189,6 @@ jQuery(document).ready(function($){
       bottom: parseInt(this.$image.css('border-bottom-width'), 10),
       left: parseInt(this.$image.css('border-left-width'), 10)
     };
-
-    // Attach event handlers to the newly minted DOM elements
     this.$overlay.hide().on('click', function() {
       self.end();
       return false;
@@ -287,20 +225,6 @@ jQuery(document).ready(function($){
       }
       return false;
     });
-
-    /*
-      Show context menu for image on right-click
-
-      There is a div containing the navigation that spans the entire image and lives above of it. If
-      you right-click, you are right clicking this div and not the image. This prevents users from
-      saving the image or using other context menu actions with the image.
-
-      To fix this, when we detect the right mouse button is pressed down, but not yet clicked, we
-      set pointer-events to none on the nav div. This is so that the upcoming right-click event on
-      the next mouseup will bubble down to the image. Once the right-click/contextmenu event occurs
-      we set the pointer events back to auto for the nav div so it can capture hover and left-click
-      events as usual.
-     */
     this.$nav.on('mousedown', function(event) {
       if (event.which === 3) {
         self.$nav.css('pointer-events', 'none');
@@ -320,7 +244,6 @@ jQuery(document).ready(function($){
     });
   };
 
-  // Show overlay and lightbox. If the image is part of a set, add siblings to album array.
   Lightbox.prototype.start = function($link) {
     var self    = this;
     var $window = $(window);
@@ -342,8 +265,6 @@ jQuery(document).ready(function($){
         title: $link.attr('data-title') || $link.attr('title')
       });
     }
-
-    // Support both data-lightbox attribute and rel attribute implementations
     var dataLightboxValue = $link.attr('data-lightbox');
     var $links;
 
@@ -357,10 +278,8 @@ jQuery(document).ready(function($){
       }
     } else {
       if ($link.attr('rel') === 'lightbox') {
-        // If image is not part of a set
         addToAlbum($link);
       } else {
-        // If image is part of a set
         $links = $($link.prop('tagName') + '[rel="' + $link.attr('rel') + '"]');
         for (var j = 0; j < $links.length; j = ++j) {
           addToAlbum($($links[j]));
@@ -370,16 +289,12 @@ jQuery(document).ready(function($){
         }
       }
     }
-
-    // Position Lightbox
     var top  = $window.scrollTop() + this.options.positionFromTop;
     var left = $window.scrollLeft();
     this.$lightbox.css({
       top: top + 'px',
       left: left + 'px'
     }).fadeIn(this.options.fadeDuration);
-
-    // Disable scrolling of the page while open
     if (this.options.disableScrolling) {
       $('body').addClass('lb-disable-scrolling');
     }
@@ -387,7 +302,6 @@ jQuery(document).ready(function($){
     this.changeImage(imageNumber);
   };
 
-  // Hide most UI elements in preparation for the animated resizing of the lightbox.
   Lightbox.prototype.changeImage = function(imageNumber) {
     var self = this;
 
@@ -400,8 +314,6 @@ jQuery(document).ready(function($){
     this.$lightbox.find('.lb-image, .lb-nav, .lb-prev, .lb-next, .lb-dataContainer, .lb-numbers, .lb-caption').hide();
 
     this.$outerContainer.addClass('animating');
-
-    // When image to show is preloaded, we send the width and height to sizeContainer()
     var preloader = new Image();
     preloader.onload = function() {
       var $preloader;
@@ -420,15 +332,12 @@ jQuery(document).ready(function($){
       $image.height(preloader.height);
 
       if (self.options.fitImagesInViewport) {
-        // Fit image inside the viewport.
-        // Take into account the border around the image and an additional 10px gutter on each side.
 
         windowWidth    = $(window).width();
         windowHeight   = $(window).height();
         maxImageWidth  = windowWidth - self.containerPadding.left - self.containerPadding.right - self.imageBorderWidth.left - self.imageBorderWidth.right - 20;
         maxImageHeight = windowHeight - self.containerPadding.top - self.containerPadding.bottom - self.imageBorderWidth.top - self.imageBorderWidth.bottom - 120;
 
-        // Check if image size is larger then maxWidth|maxHeight in settings
         if (self.options.maxWidth && self.options.maxWidth < maxImageWidth) {
           maxImageWidth = self.options.maxWidth;
         }
@@ -436,7 +345,6 @@ jQuery(document).ready(function($){
           maxImageHeight = self.options.maxHeight;
         }
 
-        // Is there a fitting issue?
         if ((preloader.width > maxImageWidth) || (preloader.height > maxImageHeight)) {
           if ((preloader.width / maxImageWidth) > (preloader.height / maxImageHeight)) {
             imageWidth  = maxImageWidth;
@@ -457,15 +365,12 @@ jQuery(document).ready(function($){
     preloader.src          = this.album[imageNumber].link;
     this.currentImageIndex = imageNumber;
   };
-
-  // Stretch overlay to fit the viewport
   Lightbox.prototype.sizeOverlay = function() {
     this.$overlay
       .width($(document).width())
       .height($(document).height());
   };
 
-  // Animate the size of the lightbox to fit the image we are showing
   Lightbox.prototype.sizeContainer = function(imageWidth, imageHeight) {
     var self = this;
 
@@ -493,7 +398,6 @@ jQuery(document).ready(function($){
     }
   };
 
-  // Display the image and its details and begin preload neighboring images.
   Lightbox.prototype.showImage = function() {
     this.$lightbox.find('.lb-loader').stop(true).hide();
     this.$lightbox.find('.lb-image').fadeIn(this.options.imageFadeDuration);
@@ -504,11 +408,7 @@ jQuery(document).ready(function($){
     this.enableKeyboardNav();
   };
 
-  // Display previous and next navigation if appropriate.
   Lightbox.prototype.updateNav = function() {
-    // Check to see if the browser supports touch events. If so, we take the conservative approach
-    // and assume that mouse hover events are not supported and always show prev/next navigation
-    // arrows in image sets.
     var alwaysShowNav = false;
     try {
       document.createEvent('TouchEvent');
@@ -539,13 +439,9 @@ jQuery(document).ready(function($){
       }
     }
   };
-
-  // Display caption, image number, and closing button.
   Lightbox.prototype.updateDetails = function() {
     var self = this;
 
-    // Enable anchor clicks in the injected caption html.
-    // Thanks Nate Wright for the fix. @https://github.com/NateWr
     if (typeof this.album[this.currentImageIndex].title !== 'undefined' &&
       this.album[this.currentImageIndex].title !== '') {
       var $caption = this.$lightbox.find('.lb-caption');
@@ -578,7 +474,6 @@ jQuery(document).ready(function($){
     });
   };
 
-  // Preload previous and next images in set.
   Lightbox.prototype.preloadNeighboringImages = function() {
     if (this.album.length > this.currentImageIndex + 1) {
       var preloadNext = new Image();
@@ -640,25 +535,9 @@ jQuery(document).ready(function($){
 }));
 
 
-/*
-* MIXITUP - A CSS3 and JQuery Filter & Sort Plugin
-* Version: 1.5.5
-* License: Creative Commons Attribution-NoDerivs 3.0 Unported - CC BY-ND 3.0
-* http://creativecommons.org/licenses/by-nd/3.0/
-* This software may be used freely on commercial and non-commercial projects with attribution to the author/copyright holder.
-* Author: Patrick Kunka
-* Copyright 2012-2013 Patrick Kunka, Barrel LLC, All Rights Reserved
-* 
-* http://mixitup.io
-*/
-
 (function($){
-    
-    // DECLARE METHODS
  
     var methods = {
-
-        // "INIT" METHOD
     
         init: function(settings){
 
@@ -683,11 +562,8 @@ jQuery(document).ready(function($){
                     chromeFix(this.id);
                 };
                 
-                // BUILD CONFIG OBJECT
 
                 var config = {
-                    
-                    // PUBLIC PROPERTIES
                     
                     targetSelector : '.mix',
                     filterSelector : '.filter',
@@ -715,9 +591,6 @@ jQuery(document).ready(function($){
                     onMixLoad: null,
                     onMixStart : null,
                     onMixEnd : null,
-
-                    // MISC
-
                     container : null,
                     origOrder : [],
                     startOrder : [],
@@ -733,8 +606,6 @@ jQuery(document).ready(function($){
                     isTouch : false,
                     resetDelay : 0,
                     failsafe : null,
-
-                    // CSS
                     
                     prefix : '',
                     easingFallback : 'ease-in-out',
@@ -753,13 +624,8 @@ jQuery(document).ready(function($){
                 if(settings){
                     $.extend(config, settings);
                 };
-
-                // ADD CONFIG OBJECT TO CONTAINER OBJECT PER INSTANTIATION
                 
                 this.config = config;
-                
-                // DETECT TOUCH
-                
                 $.support.touch = 'ontouchend' in document;
 
                 if ($.support.touch) {
@@ -767,23 +633,15 @@ jQuery(document).ready(function($){
                     config.resetDelay = 350;
                 };
                 
-                // LOCALIZE CONTAINER
-    
                 config.container = $(this);
                 var $cont = config.container;
-                
-                // GET VENDOR PREFIX
                 
                 config.prefix = prefix($cont[0]);
                 config.prefix = config.prefix ? '-'+config.prefix.toLowerCase()+'-' : '';
                 
-                // CACHE 'DEFAULT' SORTING ORDER
-            
                 $cont.find(config.targetSelector).each(function(){
                     config.origOrder.push($(this));
                 });
-                
-                // PERFORM SORT ON LOAD 
                 
                 if(config.sortOnLoad){
                     var sortby, order;
@@ -797,24 +655,18 @@ jQuery(document).ready(function($){
                     sort(sortby, order, $cont, config);
                 };
                 
-                // BUILD TRANSITION AND PERSPECTIVE OBJECTS
-                
                 for(var i = 0; i<2; i++){
                     var a = i==0 ? a = config.prefix : '';
                     config.transition[a+'transition'] = 'all '+config.transitionSpeed+'ms ease-in-out';
                     config.perspective[a+'perspective'] = config.perspectiveDistance+'px';
                     config.perspective[a+'perspective-origin'] = config.perspectiveOrigin;
                 };
-                
-                // BUILD TRANSITION CLEANER
+            
                 
                 for(var i = 0; i<2; i++){
                     var a = i==0 ? a = config.prefix : '';
                     config.clean[a+'transition'] = 'none';
                 };
-    
-                // CHOOSE GRID OR LIST
-    
                 if(config.layoutMode == 'list'){
                     $cont.addClass(config.listClass);
                     config.origDisplay = config.targetDisplayList;
@@ -824,25 +676,18 @@ jQuery(document).ready(function($){
                 };
                 config.origLayout = config.layoutMode;
                 
-                // PARSE 'SHOWONLOAD'
                 
                 var showOnLoadArray = config.showOnLoad.split(' ');
-                
-                // GIVE ACTIVE FILTER ACTIVE CLASS
                 
                 $.each(showOnLoadArray, function(){
                     $(config.filterSelector+'[data-filter="'+this+'"]').addClass('active');
                 });
                 
-                // RENAME "ALL" CATEGORY TO "MIX_ALL"
-    
                 $cont.find(config.targetSelector).addClass('mix_all');
                 if(showOnLoadArray[0]  == 'all'){
                     showOnLoadArray[0] = 'mix_all',
                     config.showOnLoad = 'mix_all';
                 };
-                
-                // FADE IN 'SHOWONLOAD'
                 
                 var $showOnLoad = $();
                 $.each(showOnLoadArray, function(){
@@ -859,15 +704,11 @@ jQuery(document).ready(function($){
                     $t.css(config.transition);
                 });
                 
-                // WRAP FADE-IN TO PREVENT RACE CONDITION
-                
                 var delay = setTimeout(function(){
                     
                     config.mixing = true;
                     
                     $showOnLoad.css('opacity','1');
-                    
-                    // CLEAN UP
                     
                     var reset = setTimeout(function(){
                         if(config.layoutMode == 'list'){
@@ -882,14 +723,10 @@ jQuery(document).ready(function($){
                             });
                         };
                         
-                        // FIRE "ONMIXLOAD" CALLBACK
-                        
                         config.mixing = false;
 
                         if(typeof config.onMixLoad == 'function') {
                             var output = config.onMixLoad.call(this, config);
-
-                            // UPDATE CONFIG IF DATA RETURNED
 
                             config = output ? output : config;
                         };
@@ -897,17 +734,11 @@ jQuery(document).ready(function($){
                     },config.transitionSpeed);
                 },10);
                 
-                // PRESET ACTIVE FILTER
-                
                 config.filter = config.showOnLoad;
-            
-                // BIND SORT CLICK HANDLERS
             
                 $(config.sortSelector).bind(config.buttonEvent,function(){
                     
                     if(!config.mixing){
-                        
-                        // PARSE SORT ARGUMENTS FROM BUTTON CLASSES
                         
                         var $t = $(this),
                         sortby = $t.attr('data-sort'),
@@ -929,20 +760,13 @@ jQuery(document).ready(function($){
                     };
                 
                 });
-
-                // BIND FILTER CLICK HANDLERS
-
                 $(config.filterSelector).bind(config.buttonEvent,function(){
                 
                     if(!config.mixing){
                         
                         var $t = $(this);
                         
-                        // PARSE FILTER ARGUMENTS FROM BUTTON CLASSES
-        
                         if(config.multiFilter == false){
-                            
-                            // SINGLE ACTIVE BUTTON
                             
                             $(config.filterSelector).removeClass('active');
                             $t.addClass('active');
@@ -953,28 +777,20 @@ jQuery(document).ready(function($){
 
                         } else {
                         
-                            // MULTIPLE ACTIVE BUTTONS
-                            
                             var thisFilter = $t.attr('data-filter'); 
                         
                             if($t.hasClass('active')){
                                 $t.removeClass('active');
                                 
-                                // REMOVE FILTER FROM SPACE-SEPERATED STRING
-                                
                                 var re = new RegExp('(\\s|^)'+thisFilter);
                                 config.filter = config.filter.replace(re,'');
                             } else {
-                                
-                                // ADD FILTER TO SPACE-SEPERATED STRING
                                 
                                 $t.addClass('active');
                                 config.filter = config.filter+' '+thisFilter;
                                 
                             };
                         };
-                        
-                        // GO MIX
                         
                         goMix(config.filter, null, null, $cont, config);
 
